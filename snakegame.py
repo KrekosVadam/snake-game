@@ -3,7 +3,6 @@
 #
 # A snake game created by Jadon Krekos
 # Purpose is to be similar to Google's Snake game
-# SNAKE_COLOUR = "#2f59c4"
 # #
 
 import random
