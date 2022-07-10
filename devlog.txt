@@ -1,5 +1,4 @@
 This is the devlog file to note all Changes
-
 1.0 Original version of the snake Game
-
 1.1 Bug fixes
+1.2 Widened game area. Added score counter. Fixed border bugs.
