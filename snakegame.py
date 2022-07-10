@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 # #
-#
 # A snake game created by Jadon Krekos
 # Purpose is to be similar to Google's Snake game
 # #
 
 import random
 import pygame
+import pygame.freetype
 from pygame.locals import *
 
+pygame.init()
 
 ##
 # Canvas Class
@@ -25,9 +26,8 @@ class Canvas:
 
     def draw(self, __window):
         count = 0
-
-        for i in range(1, self.GRASS_LENGTH + 1):
-            for z in range(1, self.GRASS_LENGTH + 1):
+        for i in range(2, self.GRASS_LENGTH + 2):
+            for z in range(self.GRASS_LENGTH + 2):
                 if count % 2 == 0:
                     pygame.draw.rect(__window, self.GRASS_COLOUR1, [self.SIZE*z, self.SIZE *i, self.SIZE, self.SIZE])
                 else:
@@ -110,7 +110,7 @@ class Food:
         self.HEIGHT = 640
         self.food_size = 40
         self.x = round(random.randrange(40, self.WIDTH - self.food_size * 2) / self.food_size) * self.food_size
-        self.y = round(random.randrange(40, self.HEIGHT - self.food_size * 2) / self.food_size) * self.food_size
+        self.y = round(random.randrange(40, self.HEIGHT - self.food_size) / self.food_size) * self.food_size
 
     def respawn(self, Snake, __window):
         bad_spawn = True
@@ -137,11 +137,11 @@ class Game:
     HEIGHT = 640
     WIDTH = 640
     COLOUR = "#333333"
-
-
+    font = pygame.font.Font('freesansbold.ttf', 14)
+    
     def __init__(self):
         pygame.font.init()
-        pygame.display.set_caption("Snaik")
+        pygame.display.set_caption("Snake")
         self.__window = pygame.display.set_mode((self.HEIGHT, self.WIDTH))
 
         self.__canvas = Canvas()
@@ -154,11 +154,12 @@ class Game:
         self.running = True
 
         while self.running:
-            pygame.time.delay(120)
+            pygame.time.delay(80)
+            self.__clock.tick(10)
             self.__handle_events()
             self.__draw_playspace()
+            self.show_score(10, 10)
             self.__draw_playerelements()
-            self.__clock.tick(15)
 
 
     def __handle_events(self):
@@ -194,7 +195,7 @@ class Game:
         pygame.display.flip()
 
     def boundary_collision(self):
-        if self.__snake.x < 0 or self.__snake.y < 0 or self.__snake.x > self.WIDTH - 40 or self.__snake.y > self.HEIGHT - 40:
+        if self.__snake.x < -40 or self.__snake.y < 40 or self.__snake.x > self.WIDTH or self.__snake.y > self.HEIGHT:
             return True
         else:
             return False
@@ -204,12 +205,17 @@ class Game:
             return True
         else:
             return False
-
+    
+# add counter to top left of screen
     def score(self):
-        counter = 0
-        for i in range(self.__snake.snake_length):
+        counter = -1
+        for item in self.__snake.snake_length:
             counter += 1
         return counter
+    
+    def show_score(self, x, y):
+        the_score = self.font.render("Score: " + str(self.score()), True, (255,255,255))
+        self.__window.blit(the_score, (x, y))
 
     def __draw_playspace(self):
         self.__window.fill(self.COLOUR)
@@ -222,3 +228,4 @@ class Game:
 
 
 Game().run()
+
